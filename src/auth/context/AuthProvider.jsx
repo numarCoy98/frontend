@@ -3,6 +3,7 @@ import { AuthContext } from "./AuthContext"
 import { authReducer } from "./authReducer"
 import { types } from "../types/types";
 import { useFetch } from "../../hooks";
+import chatApi from "../../../api/chatApi";
 
 const init = () => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -33,13 +34,8 @@ export const AuthProvider = ({ children }) => {
         // });
         // console.log({ data, isLoading, hasError })
         try {
-            // const {} = await
-            const user = {
-                "ok": true,
-                "uid": "644404af0ea32102156eebbb",
-                "name": "Anlly coy",
-                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NDQ0MDRhZjBlYTMyMTAyMTU2ZWViYmIiLCJuYW1lIjoiQW5sbHkgY295IiwiaWF0IjoxNjgyMTc5NDE1LCJleHAiOjE2ODIxODY2MTV9.PBF4XNcLhKZornocI3QI6s2mwY7oHvToCPAVEXs6dvY"
-            }
+            const resp = await chatApi.post('/auth', { email, password })
+            console.log({ resp })
             const action = {
                 type: types.login,
                 payload: user
@@ -49,7 +45,7 @@ export const AuthProvider = ({ children }) => {
             dispatch(action)
 
         } catch (error) {
-
+            console.log({ error })
         }
     }
     return (
