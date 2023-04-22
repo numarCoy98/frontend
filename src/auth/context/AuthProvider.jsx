@@ -15,33 +15,16 @@ const init = () => {
 
 
 export const AuthProvider = ({ children }) => {
-
     const [authState, dispatch] = useReducer(authReducer, {}, init);
-
-
-    // const onLogin = async (email, password) => {
-
-    // }
     const onLogin = async (email, password) => {
-        console.log({ email, password })
-        // const { data, isLoading, hasError } = useFetch(`localhost:5000/api/auth`, {
-        //     method: 'post',
-        //     body:
-        //     {
-        //         "email": "anllycoy@gmail.com",
-        //         "password": "123456678"
-        //     }
-        // });
-        // console.log({ data, isLoading, hasError })
         try {
-            const resp = await chatApi.post('/auth', { email, password })
-            console.log({ resp })
+            const { data } = await chatApi.post('/auth', { email, password })
+            localStorage.setItem('user', JSON.stringify(data))
+            localStorage.setItem('token', data.token)
             const action = {
                 type: types.login,
-                payload: user
+                payload: data
             }
-            localStorage.setItem('user', JSON.stringify(user))
-            localStorage.setItem('token', JSON.stringify(user.token))
             dispatch(action)
 
         } catch (error) {

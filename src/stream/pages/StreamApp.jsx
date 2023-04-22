@@ -1,112 +1,28 @@
 import { useContext, useEffect, useState } from "react"
+import chatApi from "../../../api/chatApi"
 import { AuthContext } from "../../auth"
-import { useFetch } from "../../hooks"
+import { useAxios } from "../../hooks"
 import { Message } from "./components/Message"
-
-const messages = [
-    {
-        "_id": "64437abbfc2248b3b03294a4",
-        "message": "Hola a todos",
-        "date": "1970-01-01T00:00:00.000Z",
-        "user_id": {
-            "_id": "6443585153478acc5bce2a8e",
-            "name": "Numar coy",
-            "role": "moderator"
-        },
-        "__v": 0
-    },
-    {
-        "_id": "64437b9df35bdac9c6c7d838",
-        "message": "Hola a todos",
-        "date": "1970-01-01T00:00:00.000Z",
-        "user_id": {
-            "_id": "6443585153478acc5bce2a8e",
-            "name": "Numar coy",
-            "role": "moderator"
-        },
-        "__v": 0
-    },
-    {
-        "_id": "64437bd2f37e22580a357c8c",
-        "message": "Hola a todos",
-        "date": "1970-01-01T00:00:00.000Z",
-        "user_id": {
-            "_id": "6443585153478acc5bce2a8e",
-            "name": "Numar coy",
-            "role": "moderator"
-        },
-        "__v": 0
-    },
-    {
-        "_id": "64437c165594132e59722f14",
-        "message": "Hola a todos",
-        "date": "1970-01-01T00:00:00.000Z",
-        "user_id": {
-            "_id": "6443585153478acc5bce2a8e",
-            "name": "Numar coy",
-            "role": "moderator"
-        },
-        "__v": 0
-    },
-    {
-        "_id": "644405f3285a830543a13e74",
-        "user_id": {
-            "_id": "644404af0ea32102156eebbb",
-            "name": "Anlly coy",
-            "role": "student"
-        },
-        "message": "Hola, cómo estas?",
-        "date": "1970-01-01T00:00:00.034Z",
-        "__v": 0
-    },
-    {
-        "_id": "644406409f0036fa7fe21d17",
-        "user_id": {
-            "_id": "644404af0ea32102156eebbb",
-            "name": "Anlly coy",
-            "role": "student"
-        },
-        "message": "qué estan haciendo?",
-        "date": "1970-01-01T00:00:00.034Z",
-        "__v": 0
-    },
-    {
-        "_id": "6444064e9f0036fa7fe21d19",
-        "user_id": {
-            "_id": "644404af0ea32102156eebbb",
-            "name": "Anlly coy",
-            "role": "student"
-        },
-        "message": "Los amo",
-        "date": "1970-01-01T00:00:00.036Z",
-        "__v": 0
-    }
-]
 
 export const StreamApp = () => {
 
-    messages.sort((a, b) => new Date(a.date) - new Date(b.date))
-
     const [newMessage, setMessage] = useState('')
+    // const [{ isLoading, data, hasError }, loadMessage] = useState({
+    //     data: {},
+    //     isLoading: false,
+    //     hasError: null,
+    // })
     const { authState: { user: { uid } } } = useContext(AuthContext)
-    // console.log({ user })
 
-    // useEffect(() => {
-    //     useFetch('localhost:5000/api/chat/getMessages', {
-    //         headers: {
-    //             "x-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NDQ0MDRhZjBlYTMyMTAyMTU2ZWViYmIiLCJuYW1lIjoiQW5sbHkgY295IiwiaWF0IjoxNjgyMTc5NDE1LCJleHAiOjE2ODIxODY2MTV9.PBF4XNcLhKZornocI3QI6s2mwY7oHvToCPAVEXs6dvY"
-    //         },
-    //         body: {
-    //             "email": "numarcoy@gmail.com",
-    //             "password": "123456"
-    //         }
+    const { data, isLoading, hasError, } = useAxios('/chat/getMessages')
+    const { messages = [] } = data || {}
 
-    //     })
-    //     return () => {
+    const handleAddMessage = async () => {
 
-    //     }
-    // }, [])
+        const { data } = await chatApi.post('/chat/addMessage', { user_id: uid, message: newMessage, date: new Date().getTime() })
 
+        setMessage('')
+    }
 
     return (
         <>
@@ -117,7 +33,12 @@ export const StreamApp = () => {
                             src="https://www.youtube.com/embed/tgbNymZ7vqY?playlist=tgbNymZ7vqY&loop=1">
                         </iframe>
                     </div>
-                    <div className='col-4'>
+                    {isLoading ? (
+                        <div className="alert alert-info text-center">
+                            loading....
+                        </div>
+                    ) : <div className='col-4'>
+
                         <section style={{ backgroundColor: '#eee' }}>
                             <div className="row d-flex justify-content-center">
                                 <div className="card">
@@ -131,7 +52,7 @@ export const StreamApp = () => {
                                         </div>
                                     </div>
                                     <div className="card-body overflow-auto" data-mdb-perfect-scrollbar="true" style={{ position: 'relative', height: '400px' }}>
-                                        {messages.map(({ _id: idMessage, date, message, user_id: { name, role, _id } }) =>
+                                        {messages.length && messages.map(({ _id: idMessage, date, message, user_id: { name, role, _id } }) =>
                                             <Message
                                                 key={idMessage}
                                                 date={date}
@@ -160,7 +81,7 @@ export const StreamApp = () => {
                                 </div>
                             </div>
                         </section>
-                    </div>
+                    </div>}
                 </div>
             </div>
         </>
