@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-export const useFetch = (url) => {
+export const useFetch = (url, data = {}) => {
 
     const [state, setState] = useState({
         data: null,
@@ -12,7 +12,7 @@ export const useFetch = (url) => {
         setState({ ...state, isLoading: true })
         // TODO: revisar try para el error
         try {
-            const resp = await fetch(url);
+            const resp = await fetch(url, data);
             const data = await resp.json();
             setState({ data, isLoading: false, hasError: null })
         } catch (error) {

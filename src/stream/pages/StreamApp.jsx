@@ -1,4 +1,6 @@
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
+import { AuthContext } from "../../auth"
+import { useFetch } from "../../hooks"
 import { Message } from "./components/Message"
 
 const messages = [
@@ -82,10 +84,29 @@ const messages = [
 ]
 
 export const StreamApp = () => {
-    const userUid = "6443585153478acc5bce2a8e"
+
     messages.sort((a, b) => new Date(a.date) - new Date(b.date))
 
     const [newMessage, setMessage] = useState('')
+    const { authState: { user: { uid } } } = useContext(AuthContext)
+    // console.log({ user })
+
+    // useEffect(() => {
+    //     useFetch('localhost:5000/api/chat/getMessages', {
+    //         headers: {
+    //             "x-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NDQ0MDRhZjBlYTMyMTAyMTU2ZWViYmIiLCJuYW1lIjoiQW5sbHkgY295IiwiaWF0IjoxNjgyMTc5NDE1LCJleHAiOjE2ODIxODY2MTV9.PBF4XNcLhKZornocI3QI6s2mwY7oHvToCPAVEXs6dvY"
+    //         },
+    //         body: {
+    //             "email": "numarcoy@gmail.com",
+    //             "password": "123456"
+    //         }
+
+    //     })
+    //     return () => {
+
+    //     }
+    // }, [])
+
 
     return (
         <>
@@ -117,7 +138,7 @@ export const StreamApp = () => {
                                                 message={message}
                                                 name={name}
                                                 role={role}
-                                                isOwned={_id === userUid}
+                                                isOwned={_id === uid}
                                             />)}
                                     </div>
                                     <div className="card-footer text-muted d-flex justify-content-start align-items-center p-3">

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useForm } from '../../hooks';
 import './loginApp.css';
 import Swal from 'sweetalert2'
+import { AuthContext } from '../context';
 
 export const LoginApp = () => {
 
+    const { onLogin } = useContext(AuthContext)
     const { state, onInputChange, onResetForm } = useForm({
         email: '',
         password: ''
@@ -18,6 +20,7 @@ export const LoginApp = () => {
         const isPassword = password.length >= 6
 
         if (cleanEmail && isPassword) {
+            onLogin(email, password)
             console.log({ state })
             onResetForm()
         }

@@ -1,13 +1,16 @@
+import { useContext } from "react"
 import { Link, NavLink } from "react-router-dom"
+import { AuthContext } from "../auth"
 
 export const Navbar = () => {
-    const authStatus = 'not-authenticate';
+    const { authState } = useContext(AuthContext)
+    // const authStatus = 'not-authenticate';
     return (
         <div className="d-flex align-items-center justify-content-between p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
             <h5 className="my-0 mr-md-auto font-weight-normal">Company</h5>
             <div className="d-flex align-items-center">
                 {
-                    (authStatus !== 'not-authenticate') ? (
+                    (authState.logged) ? (
                         <>
                             <a className="btn btn-outline-danger" href="#">Salir</a>
                         </>

@@ -3,13 +3,16 @@ import { LoginApp } from "./auth/pages/LoginApp"
 import { StreamApp } from "./stream/pages/StreamApp"
 import { BrowserRouter } from "react-router-dom"
 import { AppRouters } from "./routes/AppRouters"
+import { AuthProvider } from "./auth"
 
 export const App = () => {
     return (
-        <BrowserRouter>
-            <Navbar />
-            <AppRouters />
-            {/* <LoginApp /> */}
-        </BrowserRouter>
+        <AuthProvider>
+            <BrowserRouter>
+                <Navbar />
+                <AppRouters />
+                {/* <LoginApp /> */}
+            </BrowserRouter>
+        </AuthProvider>
     )
 }
