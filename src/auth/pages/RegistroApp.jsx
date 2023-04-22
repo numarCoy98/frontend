@@ -1,7 +1,8 @@
 export const RegistroApp = () => {
+
     return (
-        <div className="col-md-6 login-form-2">
-            <h3>Registro</h3>
+        <div className="login-form-2" style={{ backgroundColor: '#E7E9EB' }}>
+            <h3 style={{ color: 'black' }} >Registro</h3>
             <form>
                 <div className="form-group mb-2">
                     <input
@@ -31,6 +32,20 @@ export const RegistroApp = () => {
                         className="form-control"
                         placeholder="Repita la contraseña"
                     />
+                </div>
+                <div>
+                    <div className="form-check">
+                        <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
+                        <label className="form-check-label" htmlFor="flexRadioDefault1">
+                            Estudiante
+                        </label>
+                    </div>
+                    <div className="form-check">
+                        <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" defaultChecked />
+                        <label className="form-check-label" htmlFor="flexRadioDefault2">
+                            Moderador
+                        </label>
+                    </div>
                 </div>
 
                 <div className="form-group mb-2">
