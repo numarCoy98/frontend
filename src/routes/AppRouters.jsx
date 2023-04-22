@@ -3,7 +3,8 @@ import { LoginApp } from '../auth/pages/LoginApp';
 import { StreamApp } from '../stream/pages/StreamApp';
 
 export const AppRouters = () => {
-    const authStatus = 'not-authenticate';
+    // const authStatus = 'not-authenticate';
+    const authStatus = 'authenticate';
 
     return (
         <Routes>
