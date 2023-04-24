@@ -18,9 +18,7 @@ export const StreamApp = () => {
     const { messages = [] } = data || {}
 
     const handleAddMessage = async () => {
-
         const { data } = await chatApi.post('/chat/addMessage', { user_id: uid, message: newMessage, date: new Date().getTime() })
-
         setMessage('')
     }
 
@@ -73,7 +71,11 @@ export const StreamApp = () => {
                                                 value={newMessage}
                                                 onChange={({ target: { value } }) => setMessage(value)}
                                             />
-                                            <button className="btn btn-primary" type="button" id="button-addon2" style={{ paddingTop: '.55rem' }}>
+                                            <button
+                                                onClick={handleAddMessage}
+                                                className="btn btn-primary"
+                                                type="button"
+                                                id="button-addon2" style={{ paddingTop: '.55rem' }}>
                                                 Enviar
                                             </button>
                                         </div>
