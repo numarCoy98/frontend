@@ -44,3 +44,16 @@ yarn dev
 ### Autor
 
 Desarrollo realizado por Numar Stiven Coy Paez 
+
+
+### usuarios para conectarse
+
+#### usuario 1
+correo: numarcoy@gmial.com
+contraseña: 123456
+
+
+#### usuario 2
+correo: anllycoy@gmail.com
+contraseña: 123456678
+
