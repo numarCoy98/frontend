@@ -7,25 +7,19 @@ import { Message } from "./components/Message"
 import { useRef } from 'react';
 
 import { io } from "socket.io-client";
-const { SOCKET_API } = getEnvVariables()
+const { VITE_SOCKET_API } = getEnvVariables()
 
-const socket = io('http://localhost:5000')
-
-
+const socket = io(VITE_SOCKET_API)
 
 export const StreamApp = () => {
     const [newMessage, setMessage] = useState('')
-    // const [isNewMessage, setIsNewMessage] = useState(false)
-    const [isLoading, setIsLoading] = useState(false);
     const [messages, loadMessages] = useState([])
 
     const myRef = useRef(null);
 
     const fetchData = async () => {
-        // setIsLoading(true);
         const { data: { messages } } = await chatApi.get('/chat/getMessages');
         loadMessages(messages.sort((a, b) => a.date - b.date));
-        // setIsLoading(false);
     }
 
     const { authState: { user: { uid } } } = useContext(AuthContext)
@@ -83,11 +77,6 @@ export const StreamApp = () => {
                                     </div>
                                     <div className="card-body overflow-auto" data-mdb-perfect-scrollbar="true" style={{ position: 'relative', height: '400px' }}
                                     >
-                                        {/* {isLoading ? (
-                                            <div className="alert alert-info text-center">
-                                                loading....
-                                            </div>
-                                        ) : <> */}
                                         {
                                             messages?.length && messages.map(({ _id: idMessage, date, message, user_id: { name, role, _id } }, ix) =>
                                                 <Message
@@ -99,13 +88,9 @@ export const StreamApp = () => {
                                                     isOwned={_id === uid}
                                                 />)
                                         }
-                                        {/* </> */}
-
-                                        {/* } */}
-                                        <div ref={myRef} style={{ height: '30px', backgroundColor: 'red' }}></div>
+                                        <div ref={myRef} style={{ height: '15px' }}></div>
                                     </div>
                                     <div className="card-footer text-muted d-flex justify-content-start align-items-center p-3">
-                                        {/* <div className="input-group mb-0"> */}
                                         <form onSubmit={handleAddMessage} className="input-group mb-0">
                                             <input
                                                 type="text"
@@ -117,14 +102,12 @@ export const StreamApp = () => {
                                                 onChange={({ target: { value } }) => setMessage(value)}
                                             />
                                             <button
-                                                // onClick={handleAddMessage}
                                                 type="submit"
                                                 className="btn btn-primary"
                                                 id="button-addon2" style={{ paddingTop: '.55rem' }}>
                                                 Enviar
                                             </button>
                                         </form>
-                                        {/* </div> */}
                                     </div>
                                 </div>
 

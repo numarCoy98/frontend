@@ -18,7 +18,6 @@ export const useFetch = (url, data = {}) => {
         } catch (error) {
             setState({ data: null, hasError: true, isLoading: false })
         }
-        // console.log({ data })
     }
 
     useEffect(() => {

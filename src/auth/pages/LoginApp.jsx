@@ -21,7 +21,6 @@ export const LoginApp = () => {
 
         if (cleanEmail && isPassword) {
             onLogin(email, password)
-            console.log({ state })
             onResetForm()
         }
         else {
