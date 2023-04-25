@@ -2,7 +2,7 @@ import { useContext, useEffect, useLayoutEffect, useState } from "react"
 import chatApi from "../../../api/chatApi"
 import { getEnvVariables } from "../../../helpers/getEnvVariables"
 import { AuthContext } from "../../auth"
-import { useAxios } from "../../hooks"
+// import { useAxios } from "../../hooks"
 import { Message } from "./components/Message"
 import { useRef } from 'react';
 
@@ -15,67 +15,48 @@ const socket = io('http://localhost:5000')
 
 export const StreamApp = () => {
     const [newMessage, setMessage] = useState('')
-    const [isNewMessage, setIsNewMessage] = useState(false)
+    // const [isNewMessage, setIsNewMessage] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
     const [messages, loadMessages] = useState([])
 
     const myRef = useRef(null);
 
+    const fetchData = async () => {
+        // setIsLoading(true);
+        const { data: { messages } } = await chatApi.get('/chat/getMessages');
+        loadMessages(messages.sort((a, b) => a.date - b.date));
+        // setIsLoading(false);
+    }
+
     const { authState: { user: { uid } } } = useContext(AuthContext)
 
-    console.warn('rendering')
-
-    const handleAddMessage = async () => {
+    const handleAddMessage = async (e) => {
+        e.preventDefault();
         const { data } = await chatApi.post('/chat/addMessage', { user_id: uid, message: newMessage, date: new Date().getTime() })
-        // console.log({ data })
-        if (data.ok) { socket.emit('newMessage', { user_id: uid, message: newMessage, date: new Date().getTime() }) }
-        setIsNewMessage(isMessage => !isMessage)
+        if (data.ok) {
+            socket.emit('newMessage', { user_id: uid, message: newMessage, date: new Date().getTime() })
+            fetchData()
+        }
         setMessage('')
     }
 
-    // const refe = () => {
-    //     myRef.current.scrollTop = 400
-    //     // console.log({ ref: myRef.current, })
-    // }
     const scrollToBottom = () => {
-        // myRef.current?.scrollIntoView({ behavior: "smooth" })
         myRef.current?.scrollIntoView({ behavior: "smooth", block: 'end' })
-        // console.log({ aoeu: myRe })
-        // console.log({ aoeu: myRef?.current.scrollHeight, aoeuai: myRef?.current.scrollWidth })
-        // myRef?.current.scrollTop = myRef?.current.scrollHeight
-
     }
-    console.log(myRef)
+
     useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true);
-            const { data: { messages } } = await chatApi.get('/chat/getMessages');
-            console.log('esto no se repite ni por el putas')
-
-            loadMessages(messages);
-            setIsLoading(false);
-        }
-        // refe() 
-        // myRef.current.scrollTop = 400
         fetchData()
-        // myRef.current?.scrollIntoView({ behavior: 'smooth' });
-
-        // myRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        // socket.on('newMessage', () => setIsChanging(n => !n))
         socket.on('newMessage', () => {
-            // refe()
-            scrollToBottom()
             fetchData()
         })
         return () => {
             socket.off('newMessage', console.log)
         }
-    }, [isNewMessage])
+    }, [])
 
     useLayoutEffect(() => {
-        console.log('useLay')
         scrollToBottom()
-    }, [])
+    }, [messages])
 
     return (
         <>
@@ -102,29 +83,30 @@ export const StreamApp = () => {
                                     </div>
                                     <div className="card-body overflow-auto" data-mdb-perfect-scrollbar="true" style={{ position: 'relative', height: '400px' }}
                                     >
-                                        {isLoading ? (
+                                        {/* {isLoading ? (
                                             <div className="alert alert-info text-center">
                                                 loading....
                                             </div>
-                                        ) : <>
-                                            {
-                                                messages.length && messages.map(({ _id: idMessage, date, message, user_id: { name, role, _id } }) =>
-                                                    <Message
-                                                        key={idMessage}
-                                                        date={date}
-                                                        message={message}
-                                                        name={name}
-                                                        role={role}
-                                                        isOwned={_id === uid}
-                                                    />)
-                                            }
-                                        </>
-
+                                        ) : <> */}
+                                        {
+                                            messages?.length && messages.map(({ _id: idMessage, date, message, user_id: { name, role, _id } }, ix) =>
+                                                <Message
+                                                    key={idMessage}
+                                                    date={date}
+                                                    message={message}
+                                                    name={name}
+                                                    role={role}
+                                                    isOwned={_id === uid}
+                                                />)
                                         }
+                                        {/* </> */}
+
+                                        {/* } */}
                                         <div ref={myRef} style={{ height: '30px', backgroundColor: 'red' }}></div>
                                     </div>
                                     <div className="card-footer text-muted d-flex justify-content-start align-items-center p-3">
-                                        <div className="input-group mb-0">
+                                        {/* <div className="input-group mb-0"> */}
+                                        <form onSubmit={handleAddMessage} className="input-group mb-0">
                                             <input
                                                 type="text"
                                                 className="form-control"
@@ -135,13 +117,14 @@ export const StreamApp = () => {
                                                 onChange={({ target: { value } }) => setMessage(value)}
                                             />
                                             <button
-                                                onClick={handleAddMessage}
+                                                // onClick={handleAddMessage}
+                                                type="submit"
                                                 className="btn btn-primary"
-                                                type="button"
                                                 id="button-addon2" style={{ paddingTop: '.55rem' }}>
                                                 Enviar
                                             </button>
-                                        </div>
+                                        </form>
+                                        {/* </div> */}
                                     </div>
                                 </div>
 
