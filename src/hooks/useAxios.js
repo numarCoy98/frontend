@@ -3,7 +3,7 @@ import chatApi from "../../api/chatApi"
 
 
 export const useAxios = (url, data = {}) => {
-    console.log({ url })
+    // console.log({ url })
     const [state, setState] = useState({
         data: null,
         isLoading: true,
